@@ -114,6 +114,8 @@ select, input[type="search"] {
 .c h3 { margin: 0; font-size: 1.15rem; line-height: 1.4; }
 .tag-rec { color: var(--red); font-weight: 700; margin-left: .4em; white-space: nowrap; }
 .tag-new { color: var(--accent); font-weight: 700; margin-left: .4em; white-space: nowrap; font-size: .85rem; }
+.tag-old { display: inline-block; margin-top: 6px; font-size: .78rem; padding: 0 8px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
+.tag-old.stale { color: var(--red); border-color: var(--red); font-weight: 700; }
 .tag-reg { color: var(--prep); font-weight: 700; margin-left: .4em; white-space: nowrap; font-size: .95rem; }
 .chk { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); }
 .chk input { width: 20px; height: 20px; }
@@ -204,7 +206,7 @@ select, input[type="search"] {
       <li><a href="https://prefvc-ishikawa.jimdofree.com/">石川県災害ボランティア情報（能登半島地震）</a></li>
       <li><a href="https://hakuivc-ishikawa.jimdofree.com/">羽咋市災害ボランティアセンター</a>、<a href="https://hodatsushimizuvc-ishikawa.jimdofree.com/">宝達志水町災害ボランティアセンター</a>、<a href="http://nakanoto-syakyou.sblo.jp/article/191787823.html">中能登町社協</a></li>
     </ul>
-    <p>「手動確認」と書かれた項目は、自動での読み取りができなかったため、担当者が確認した内容です。情報は日々変わるため、更新ボタンで最新の版を読み込み直してください。</p>
+    <p>「手動確認・○日前」と表示された項目は、自動での読み取りができなかったため、担当者が確認した内容です。「○日前」は、確認した日からの日数で、7日以上たったものは「古い可能性」と表示します。情報は日々変わるため、更新ボタンで最新の版を読み込み直してください。</p>
   </footer>
 </div>
 
@@ -272,6 +274,12 @@ function renderPref() {
     return '<button type="button" data-pref="' + o[0] + '" aria-pressed="' + (state.pref === o[0]) + '">' + esc(o[1]) + "</button>";
   }).join("");
 }
+function oldTag(d) {
+  if (!d.manual) return "";
+  var stale = d.age !== null && d.age !== undefined && d.age >= 7;
+  var label = "手動確認" + (d.age !== null && d.age !== undefined ? "・" + d.age + "日前" : "") + (stale ? "・古い可能性" : "");
+  return '<div><span class="tag-old' + (stale ? " stale" : "") + '">' + esc(label) + "</span></div>";
+}
 function rowHtml(d) {
   var contacts = d.contacts.length
     ? d.contacts.map(function (c) { return "<div>" + linkify(c) + "</div>"; }).join("")
@@ -285,7 +293,7 @@ function rowHtml(d) {
       (d.tag ? '<span class="tag-new">' + esc(d.tag) + "</span>" : "") + "</h3>" +
       (d.name ? '<p class="sub">' + esc(d.name) + "</p>" : "") +
       '<span class="pref">' + esc(d.pref) + "</span></div>" +
-    '<div class="c" data-label="状況"><span class="pill">' + esc(d.stLabel) + "</span></div>" +
+    '<div class="c" data-label="状況"><span class="pill">' + esc(d.stLabel) + "</span>" + oldTag(d) + "</div>" +
     '<div class="c" data-label="開設日・活動期間"><div>開設：' + esc(d.opened) + "</div><div>活動：" + esc(d.period) + "</div></div>" +
     '<div class="c" data-label="募集範囲・備考"><div>' + esc(d.scope) + "</div>" +
       (d.note ? '<p class="note">' + esc(d.note) + "</p>" : "") + "</div>" +
