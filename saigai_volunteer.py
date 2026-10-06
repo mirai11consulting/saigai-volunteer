@@ -16,7 +16,7 @@ import re
 import smtplib
 import sys
 import time
-from datetime import datetime
+from datetime import date, datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from html import escape
@@ -35,7 +35,9 @@ PAGE_URL = os.environ.get("PAGE_URL", "")
 PROMPT_VERSION = "2"      # 指示文を変えたら数字を増やす（前回の結果を使い回さず、全ページを読み直す）
 MAX_TEXT = 12000          # 1ページあたりAIに渡す本文の最大文字数
 DEFAULT_MAX_LINKS = 10    # 1つの巡回元から辿る関連リンクの標準の最大数
-MAX_PAGES = 80            # 1回の実行で処理するページ数の上限
+MAX_PAGES = 160           # 1回の実行で処理するページ数の上限
+DEEP_LINKS = 3            # 社協のトップページで情報が取れなかったとき、そこからさらに辿る関連ページの最大数
+STALE_DAYS = 7            # 手動確認の情報が、この日数を超えたら「古い可能性」と表示する
 STATE_FILE = "state.json"
 SOURCES_FILE = "sources.txt"
 MANUAL_FILE = "manual.json"
@@ -55,6 +57,9 @@ REC_ORDER = {"募集中": 0, "登録受付中": 1}
 
 DEFAULT_FOLLOW = ["ボランティア", "豪雨", "台風", "大雨", "災害", "土砂", "ボラセン", "saigai", "volunteer"]
 APPLY_WORDS = ["登録", "応募", "申込", "申し込み", "フォーム", "予約", "form", "regist", "airrsv", "x.gd"]
+DEEP_WORDS = ["災害", "豪雨", "台風", "大雨", "被災", "ボランティアセンター"]
+DEEP_BOOST = ["令和8", "R8", "2026", "8月", "9月", "10月"]
+SKIP_EXT = (".jpg", ".jpeg", ".png", ".gif", ".zip", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".mp4")
 SKIP_HOSTS = ("facebook.com", "x.com", "twitter.com", "instagram.com", "youtube.com", "youtu.be",
               "line.me", "lin.ee", "forms.gle", "docs.google.com", "google.com")
 
@@ -177,6 +182,28 @@ def related_links(links, visited, follow_words, limit):
             seen.add(href)
             out.append(href)
     return out
+
+
+def deep_links(links, base_url, visited, limit=DEEP_LINKS):
+    """社協サイトのトップページから、災害関係らしいページを、同じサイトの中だけで、最大 limit 件選ぶ。"""
+    host = urlparse(base_url).netloc.lower()
+    scored, seen = [], set()
+    for label, href in links:
+        if href in visited or href in seen:
+            continue
+        pu = urlparse(href)
+        if pu.netloc.lower() != host or pu.path.lower().endswith(SKIP_EXT):
+            continue
+        hay = label + " " + href
+        score = sum(1 for w in DEEP_WORDS if w in hay)
+        if not score:
+            continue
+        if any(b in hay for b in DEEP_BOOST):
+            score += 1
+        seen.add(href)
+        scored.append((-score, len(scored), href))
+    scored.sort()
+    return [h for _, _, h in scored[:limit]]
 
 
 # ---------------------------------------------------------------- 抽出（AI）
@@ -314,23 +341,71 @@ def sanity(r):
     return r
 
 
+def parse_asof(text):
+    """「9/28」のような日付を、日付データにする。"""
+    m = re.match(r"\s*(\d{1,2})/(\d{1,2})", str(text or ""))
+    if not m:
+        return None
+    try:
+        d = date(NOW.year, int(m.group(1)), int(m.group(2)))
+    except ValueError:
+        return None
+    if d > NOW.date():
+        d = date(NOW.year - 1, d.month, d.day)
+    return d
+
+
+def manual_age(text):
+    d = parse_asof(text)
+    return (NOW.date() - d).days if d else None
+
+
+def age_text(asof, age):
+    if age is None:
+        return f"（{asof}時点）" if asof else ""
+    stale = "。古い可能性があります" if age >= STALE_DAYS else ""
+    return f"（{asof}時点・{age}日前の情報{stale}）"
+
+
 def merge_manual(auto):
     """自動で取れなかった市区町村は、手動確認のデータ(manual.json)で補う。"""
-    have = {rec_key(r) for r in auto}
     merged = list(auto)
     try:
         with open(MANUAL_FILE, encoding="utf-8") as f:
             manual = json.load(f)
     except Exception:
         manual = []
+    auto_idx = {rec_key(r): i for i, r in enumerate(merged)}
     for m in manual:
-        if rec_key(m) in have:
+        asof = m.get("as_of", "")
+        age = manual_age(asof)
+        k = rec_key(m)
+        if k in auto_idx:
+            # 自動で取れた記録の「空欄」だけを、手動確認のデータで補う（自動の結果は消さない）
+            a = merged[auto_idx[k]]
+            filled_any = False
+            for f in ("apply", "scope", "opened"):
+                if a.get(f) in EMPTY and m.get(f) not in EMPTY:
+                    a[f] = m[f]
+                    filled_any = True
+            if not a.get("contacts") and m.get("contacts"):
+                a["contacts"] = list(m["contacts"])
+                filled_any = True
+            urls = {u for _, u in a.get("links", [])}
+            for l in m.get("links", []):
+                if l[1] not in urls:
+                    a.setdefault("links", []).append(l)
+                    urls.add(l[1])
+                    filled_any = True
+            if filled_any:
+                a["note"] = ((a.get("note") or "") + f" ※空欄の一部（申込方法・連絡先など）は、手動確認{age_text(asof, age)}の内容で補っています。").strip()
             continue
         m = dict(m)
-        asof = m.pop("as_of", "")
-        tail = f"【手動確認{('（' + asof + '時点）') if asof else ''}。自動での読み取りでは確認できていません】"
+        m.pop("as_of", None)
+        tail = f"【手動確認{age_text(asof, age)}。自動での読み取りでは確認できていません】"
         m["note"] = (m.get("note", "") + " " + tail).strip()
         m["manual"] = True
+        m["age"] = age
         merged.append(m)
     return merged
 
@@ -346,8 +421,10 @@ def apply_overrides(records):
     for o in overrides:
         o = dict(o)
         asof = o.pop("as_of", "")
-        o["note"] = ((o.get("note") or "") + f" 【手動設定{('（' + asof + '時点）') if asof else ''}】").strip()
+        age = manual_age(asof)
+        o["note"] = ((o.get("note") or "") + f" 【手動設定{age_text(asof, age)}】").strip()
         o["manual"] = True
+        o["age"] = age
         o.setdefault("links", [])
         o.setdefault("contacts", [])
         k = rec_key(o)
@@ -425,8 +502,8 @@ def build_site(records):
         tpl = f.read()
     assert "/*__DATA__*/[]" in tpl, "template.html にデータの差し込み位置がありません"
     keep = ("pref", "city", "name", "st", "stLabel", "opened", "period", "scope", "cat",
-            "note", "apply", "rec", "contacts", "links", "tag")
-    data = [{k: r.get(k, "" if k not in ("contacts", "links") else []) for k in keep} for r in records]
+            "note", "apply", "rec", "contacts", "links", "tag", "manual", "age")
+    data = [{k: r.get(k, ([] if k in ("contacts", "links") else (False if k == "manual" else ("" if k != "age" else None)))) for k in keep} for r in records]
     js = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     html = tpl.replace("/*__DATA__*/[]", js)
     stamp = f"データ：{NOW.strftime('%Y年%m月%d日 %H:%M')}時点（毎朝自動更新）"
@@ -464,11 +541,17 @@ def build_email(records, gone, failed, first_run):
             rec_html = "<br><b style='color:#c62828'>【募集中】</b>"
         elif r.get("rec") == "reg":
             rec_html = "<br><b style='color:#b26a00'>【登録受付中】</b>"
+        old_html = ""
+        if r.get("manual"):
+            age = r.get("age")
+            stale = age is not None and age >= STALE_DAYS
+            label = "手動確認" + (f"・{age}日前" if age is not None else "") + ("・古い可能性" if stale else "")
+            old_html = f"<br><span style='font-size:11px;color:{'#c62828' if stale else '#666'}'>{escape(label)}</span>"
         contacts = "<br>".join(escape(c) for c in r.get("contacts", [])) or "—"
         links = " ".join(f"<a href='{escape(u)}'>{escape(l)}</a>" for l, u in r.get("links", []))
         return (
             f"<tr style='background:{bg}'>"
-            f"<td {td}>{tag_html}{cell(r['stLabel'])}</td>"
+            f"<td {td}>{tag_html}{cell(r['stLabel'])}{old_html}</td>"
             f"<td {td}>{cell(r['pref'])}<br><b>{cell(r['city'])}</b>{rec_html}</td>"
             f"<td {td}>{cell(r.get('name'))}</td>"
             f"<td {td}>開設：{cell(r.get('opened'))}<br>活動：{cell(r.get('period'))}</td>"
@@ -500,7 +583,9 @@ def build_email(records, gone, failed, first_run):
                      f"<ul style='font-size:12px'>{items}</ul>")
     fail_html = ""
     if failed:
-        items = "".join(f"<li>{escape(u)}（{escape(e)}）</li>" for u, e in failed)
+        items = "".join(f"<li>{escape(u)}（{escape(e)}）</li>" for u, e in failed[:10])
+        if len(failed) > 10:
+            items += f"<li>ほか {len(failed) - 10} 件</li>"
         fail_html = f"<h3 style='font-size:14px'>取得できなかったページ（前回の情報で補いました）</h3><ul style='font-size:12px'>{items}</ul>"
 
     page_link = f"<p style='font-size:13px'>Web版（絞り込み・検索ができます）：<a href='{escape(PAGE_URL)}'>{escape(PAGE_URL)}</a></p>" if PAGE_URL else ""
@@ -579,8 +664,16 @@ def cmd_build():
             if page_count >= MAX_PAGES:
                 break
             visited.add(u)
-            process(u, src["pref"])
+            sub = process(u, src["pref"])
             time.sleep(1)
+            # 社協のトップページなどで情報が取れなかったときは、同じサイトの災害関係のページを、もう1階層だけ辿る
+            if sub and not pages_out.get(u, {}).get("records"):
+                for u2 in deep_links(sub["links"], u, visited):
+                    if page_count >= MAX_PAGES:
+                        break
+                    visited.add(u2)
+                    process(u2, src["pref"])
+                    time.sleep(1)
 
     current = apply_overrides(merge_manual(dedupe(auto)))
     gone, first_run = tag_records(current, prev)
