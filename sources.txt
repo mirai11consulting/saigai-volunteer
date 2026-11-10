@@ -27,3 +27,26 @@ https://prefvc-ishikawa.jimdofree.com/  pref=石川県  max=4  follow=珠洲|輪
 
 # ---------- 全国 ----------
 https://www.saigaivc.com/  max=6  follow=神奈川|千葉|石川
+
+# ---------- 各社協の公式サイト（手動データの更新用） ----------
+# 大網白里市社協
+http://www.oamishakyo.com/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 八千代市社協
+https://www.yachiyosyakyo.jp/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 市原市社協
+https://www.ichihara-shakyo.or.jp/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 船橋市社協
+https://funabashi-shakyo.or.jp/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 山武市社協
+https://www.sammushakyo.jp/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 成田市社協
+http://www.naritashakyo.or.jp/  pref=千葉県  max=3  follow=災害|ボランティア|台風|豪雨
+# 四街道市社協
+https://www.yotsukaido-shakyo.or.jp/saivol_info.php?id=937  pref=千葉県  max=2  follow=災害|ボランティア
+# 東金市社協
+http://www.togane-shakyo.jp/wahtsnew_n_page.php?no=662  pref=千葉県  max=2  follow=災害|ボランティア|台風
+# 南房総市社協
+https://www.shakyo-minamiboso.or.jp/information/  pref=千葉県  max=2  follow=災害|台風|豪雨
+# 神奈川県ポータル・横須賀市
+https://www.pref.kanagawa.jp/docs/u3x/saigai/documents/siensenta-taifuu25gou.html  pref=神奈川県  max=3  follow=横須賀|三浦|ボランティア
+https://www.yokosuka-shakyo.or.jp/shakyo/vc/saigaiji-vc/  pref=神奈川県  max=0

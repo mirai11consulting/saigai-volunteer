@@ -406,6 +406,12 @@ def merge_manual(auto):
         m["note"] = (m.get("note", "") + " " + tail).strip()
         m["manual"] = True
         m["age"] = age
+        # 古い手動データは「募集中」のまま出さない（閉所済みの可能性があるため）
+        if age is not None and age > STALE_DAYS and m.get("st") in ("open", "prep"):
+            m["st"] = "prep"
+            m["rec"] = ""
+            m["stLabel"] = f"要確認（最終確認{age}日前）"
+            m["note"] = ("最新の状況は社協サイトで確認してください。 " + m["note"]).strip()
         merged.append(m)
     return merged
 

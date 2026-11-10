@@ -3,26 +3,26 @@
   "pref": "神奈川県",
   "city": "横須賀市",
   "rec": "reg",
-  "apply": "スマホアプリ「JoyLinks」をダウンロードして登録。ニーズがまとまり次第、アプリで案内されます（通知を許可しておく）。",
+  "apply": "スマホアプリ「JoyLinks」で登録・申込。ボランティア活動保険（大規模災害特例・WEB加入）が必要。依頼は入力フォーム・メール・FAX・電話で受付。",
   "name": "横須賀市災害時ボランティアセンター（YSVC）",
   "st": "open",
   "stLabel": "開設中（登録受付）",
   "opened": "9/25",
-  "period": "未定（ニーズ調査中）",
-  "scope": "市内 → 近隣市 → 県内 → 県外の順に、ニーズに応じて拡大予定",
+  "period": "活動日ごとに募集（直近: 11/7）",
+  "scope": "市内→近隣市→県内→県外（ニーズ量に応じ拡大）",
   "cat": "local",
-  "note": "登録はスマホアプリ「JoyLinks」から。活動にはボランティア活動保険への加入が必要（WEBから加入可）。",
+  "note": "高速道路無料措置あり（横浜横須賀道路・三浦縦貫道路、YSVC募集活動参加者）。活動日ごとに募集のため、次回募集は社協ページで確認。",
   "contacts": [
    "046-821-1303（9:00〜12:00、13:00〜17:00 土日祝休み）",
    "ysvc@yokosuka-shakyo.or.jp"
   ],
   "links": [
    [
-    "社協ページ",
+    "災害VC",
     "https://www.yokosuka-shakyo.or.jp/shakyo/vc/saigaiji-vc/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10"
  },
  {
   "pref": "神奈川県",
@@ -35,7 +35,7 @@
   "period": "未定",
   "scope": "現時点ではボランティアを募集していません（ニーズ把握中）",
   "cat": "unknown",
-  "note": "詳細は三浦市社協の公式Xで案内。下のメール・電話は社協の窓口で、災害VC専用かは未確認です。",
+  "note": "県ポータル(10/1時点)では登録受付中。最新は三浦市社協X(@shakyo_miura)で確認。",
   "contacts": [
    "vol2@shakyo-miura.com",
    "046-888-7347（社協事務局）"
@@ -50,7 +50,7 @@
     "https://x.com/shakyo_miura"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10"
  },
  {
   "pref": "神奈川県",
@@ -133,14 +133,14 @@
  {
   "pref": "千葉県",
   "city": "大網白里市",
-  "rec": "open",
+  "rec": "",
   "st": "open",
-  "stLabel": "開設中",
+  "stLabel": "開設中（新規登録停止中）",
   "opened": "8/14",
   "period": "8/16〜",
-  "scope": "全国",
+  "scope": "全国（事前登録制・新規登録停止中）",
   "cat": "all-country",
-  "note": "",
+  "note": "新規登録は停止中。出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -152,7 +152,7 @@
     "http://www.oamishakyo.com/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10"
  },
  {
   "pref": "千葉県",
@@ -312,14 +312,14 @@
  {
   "pref": "千葉県",
   "city": "船橋市",
-  "rec": "open",
-  "st": "open",
-  "stLabel": "開設中",
+  "rec": "",
+  "st": "normal",
+  "stLabel": "通常VC対応（災害VC 10/15閉所）",
   "opened": "台風25号で開設",
-  "period": "9/23〜",
-  "scope": "市内、近隣市",
+  "period": "―",
+  "scope": "未定",
   "cat": "local",
-  "note": "",
+  "note": "災害VCは10/15に閉所。通常VCで対応。出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -327,7 +327,7 @@
     "https://funabashi-shakyo.or.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10"
  },
  {
   "pref": "千葉県",
@@ -409,13 +409,13 @@
  {
   "pref": "千葉県",
   "city": "山武市",
-  "st": "prep",
-  "stLabel": "開設準備中",
+  "st": "normal",
+  "stLabel": "通常VC対応（災害VC 11/4閉所）",
   "opened": "台風25号",
-  "period": "未記載",
-  "scope": "未記載",
+  "period": "調整中",
+  "scope": "山武市内、近隣市町",
   "cat": "unknown",
-  "note": "",
+  "note": "災害VCは11/4に閉所。通常VCで対応。出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -423,7 +423,8 @@
     "https://www.sammushakyo.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
@@ -485,13 +486,13 @@
  {
   "pref": "千葉県",
   "city": "成田市",
-  "st": "prep",
-  "stLabel": "開設準備中",
+  "st": "normal",
+  "stLabel": "通常VC対応（災害VC 11/8閉所）",
   "opened": "台風25号",
-  "period": "未記載",
-  "scope": "未記載",
+  "period": "10/2〜",
+  "scope": "成田市在住・在勤、市内近郊",
   "cat": "unknown",
-  "note": "",
+  "note": "災害VCは11/8に閉所。通常VCで対応。出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -499,42 +500,46 @@
     "http://www.naritashakyo.or.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
   "city": "四街道市",
-  "apply": "災害VCは通常VCへ移行済み。技術系団体は、災害中間支援組織を通じて受け入れています。",
-  "st": "normal",
-  "stLabel": "通常VCへ移行",
-  "opened": "8/17",
-  "period": "8/20〜9/11（9/11に通常VCへ移行）",
-  "scope": "未記載",
+  "apply": "被災者の依頼を受付中。ボランティア募集は未開始（募集システム準備中）。申込後に現地調査を行い、活動の可否・日程を決定。",
+  "st": "open",
+  "stLabel": "開設中（被災者の依頼受付のみ）",
+  "opened": "9/28（再開設）",
+  "period": "9/28〜（終了日の記載なし）",
+  "scope": "市内の被災世帯（空き家は対象外）",
   "cat": "unknown",
-  "note": "技術系団体は、災害中間支援組織を通じて受け入れ中。",
-  "contacts": [],
+  "note": "ボランティア活動の募集は準備中。準備でき次第、社協HPで案内予定。受付9:00〜17:00。",
+  "contacts": [
+   "043-422-2945（四街道市社協 代表）"
+  ],
   "links": [
    [
-    "詳細",
-    "https://www.yotsukaido-shakyo.or.jp/saivol_info.php?id=926"
+    "開設のお知らせ(9/28)",
+    "https://www.yotsukaido-shakyo.or.jp/saivol_info.php?id=937"
    ],
    [
     "社協",
     "https://www.yotsukaido-shakyo.or.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
   "city": "東金市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "通常VC対応",
   "opened": "―",
   "period": "未定",
   "scope": "未定",
   "cat": "unknown",
-  "note": "",
+  "note": "出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -542,18 +547,19 @@
     "http://www.togane-shakyo.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
   "city": "市川市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "通常VC対応",
   "opened": "―",
   "period": "未定",
   "scope": "未定",
   "cat": "unknown",
-  "note": "",
+  "note": "出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -561,7 +567,8 @@
     "https://www.fukusi.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
@@ -587,12 +594,12 @@
   "pref": "千葉県",
   "city": "我孫子市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "通常VC対応",
   "opened": "―",
   "period": "未定",
   "scope": "未定",
   "cat": "unknown",
-  "note": "",
+  "note": "出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -600,18 +607,19 @@
     "https://www.abiko-shakyo.com/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
   "city": "富里市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "通常VC対応",
   "opened": "―",
-  "period": "未記載",
+  "period": "調整中",
   "scope": "未記載",
   "cat": "unknown",
-  "note": "",
+  "note": "出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -619,7 +627,8 @@
     "https://www.tomisatoshakyo.or.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
@@ -644,31 +653,40 @@
   "pref": "千葉県",
   "city": "南房総市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "災害VC未設置（通常VCで対応）",
   "opened": "―",
-  "period": "未記載",
-  "scope": "未記載",
+  "period": "―",
+  "scope": "市内",
   "cat": "unknown",
-  "note": "",
-  "contacts": [],
+  "note": "災害VCは開設せず、通常の南房総市ボランティアセンターが対応。11/4時点で住家被害33件のうち完了2・取下げ27・残り4件。",
+  "contacts": [
+   "0470-29-3729（南房総市社協 本所）",
+   "0470-36-2276（内房支所）",
+   "0470-44-3541（朝夷支所）"
+  ],
   "links": [
    [
-    "社協",
-    "https://www.shakyo-minamiboso.or.jp/"
+    "状況報告(11/5)",
+    "https://www.shakyo-minamiboso.or.jp/information/"
+   ],
+   [
+    "通常VC",
+    "https://www.shakyo-minamiboso.or.jp/works/volunteer/volunteercentre/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
   "city": "印西市",
   "st": "normal",
-  "stLabel": "通常VCで対応",
+  "stLabel": "通常VC対応",
   "opened": "―",
   "period": "未定",
-  "scope": "印西市に在住・在勤・在学の満15歳以上",
+  "scope": "印西市在住・在勤・在学の満18歳以上",
   "cat": "local",
-  "note": "",
+  "note": "出典:千葉県災害ボランティア情報ポータル(saigai-chiba.com)",
   "contacts": [],
   "links": [
    [
@@ -676,7 +694,8 @@
     "https://www.inzaishakyo.jp/"
    ]
   ],
-  "as_of": "9/28"
+  "as_of": "11/10",
+  "rec": ""
  },
  {
   "pref": "千葉県",
